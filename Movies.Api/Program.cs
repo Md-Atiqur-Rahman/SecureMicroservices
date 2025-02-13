@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Movies.Api.Data;
+using System.Reflection.Metadata;
+using System.Security.Policy;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +12,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MoviesApiContext>(options =>
     options.UseInMemoryDatabase("Movies"));
 
-
+builder.Services.AddAuthentication("Bearer")
+               .AddJwtBearer("Bearer", options =>
+               {
+                   options.Authority = "https://localhost:5005";
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateAudience = false
+                   };
+               });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ClientIdPolicy", policy => policy.RequireClaim("client_id", "movieClient"));
+});
 
 // Add services to the container.
 
@@ -37,7 +52,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
