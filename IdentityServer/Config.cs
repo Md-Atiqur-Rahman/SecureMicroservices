@@ -55,6 +55,8 @@ public class Config
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Address,
+                        IdentityServerConstants.StandardScopes.Email,
                         "movieAPI" //Add for for Hybrid flow
                     }
                 }
@@ -77,6 +79,8 @@ public class Config
         {
                new IdentityResources.OpenId(),
                new IdentityResources.Profile(),
+               new IdentityResources.Address(),
+               new IdentityResources.Email(),
         };
 
     public static List<TestUser> TestUsers =>

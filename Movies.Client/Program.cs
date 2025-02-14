@@ -27,8 +27,10 @@ builder.Services.AddAuthentication(options =>
     //options.ResponseType = "code";
     options.ResponseType = "code id_token";//for Hybrid flow
 
-    options.Scope.Add("openid");
-    options.Scope.Add("profile");
+    //options.Scope.Add("openid");
+    //options.Scope.Add("profile");
+    options.Scope.Add("address");
+    options.Scope.Add("email");
     options.Scope.Add("movieAPI");//for Hybrid flow
 
     options.SaveTokens = true;
