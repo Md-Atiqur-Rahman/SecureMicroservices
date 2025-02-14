@@ -5,14 +5,20 @@ using System.Reflection.Metadata;
 using System;
 using System.Security.Claims;
 using Duende.IdentityModel;
+using Microsoft.AspNetCore.Hosting.Server;
 
 namespace IdentityServer;
 
 public class Config
 {
     public static IEnumerable<Client> Clients =>
-        new Client[]
-        {
+    new Client[]
+    {
+              // removed these line for for Hybrid flow
+             //  Identity Server-এর ConfigureServices মেথডে দুটি ক্লায়েন্ট রয়েছে।
+            //  এখন, আমরা Movies Client কমেন্ট আউট করে দেব, কারণ আমরা এটি আর ব্যবহার করছি না।
+
+            /*
             new Client
             {
                 ClientId ="movieClient",
@@ -22,9 +28,9 @@ public class Config
                     new Secret("secret".Sha256())
                 },
                 AllowedScopes={"movieAPI"}
-                
-
             },
+            */
+
             new Client
                 {
                     ClientId = "movies_mvc_client",

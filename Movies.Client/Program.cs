@@ -55,14 +55,21 @@ builder.Services.AddHttpClient("IDPClient", client =>
     client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
 });
 
-builder.Services.AddSingleton(
-    new ClientCredentialsTokenRequest
-    {
-        Address = "https://localhost:5005/connect/token",
-        ClientId = "movieClient",
-        ClientSecret = "secret",
-        Scope = "movieAPI"
-    });
+//builder.Services.AddSingleton(
+//    new ClientCredentialsTokenRequest
+//    {
+//        Address = "https://localhost:5005/connect/token",
+//        ClientId = "movieClient",
+//        ClientSecret = "secret",
+//        Scope = "movieAPI"
+//    });
+
+//  এখন আর সেই অপারেশনগুলোর প্রয়োজন নেই, তাই আমি সেই সার্ভিসগুলিকে কমেন্ট আউট করে দেব।
+//  আমরা এখন Identity Server থেকে নতুন করে টোকেন নেওয়ার পরিবর্তে লগইনের সময় পাওয়া টোকেনটি ব্যবহার করব।
+//  এখানে, আমরা বিদ্যমান HttpContext ব্যবহার করছি এবং আলাদাভাবে Identity Server-এ নতুন রিকোয়েস্ট পাঠানোর দরকার নেই।
+//  আমরা এখন আর Movies Client ব্যবহার করছি না, কারণ আমরা শুধুমাত্র MVC Client ব্যবহার করছি।
+
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllersWithViews();
 
