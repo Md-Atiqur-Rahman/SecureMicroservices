@@ -29,7 +29,9 @@ public class Config
                 {
                     ClientId = "movies_mvc_client",
                     ClientName = "Movies Mvc Web App",
-                    AllowedGrantTypes = GrantTypes.Code,//আমরা কোড ফ্লো ব্যবহার করব যা লগইন করার সময় টোকেন পেতে সাহায্য করবে।
+                    //AllowedGrantTypes = GrantTypes.Code, // আমরা কোড ফ্লো ব্যবহার করব যা লগইন করার সময় টোকেন পেতে সাহায্য করবে।
+                    AllowedGrantTypes = GrantTypes.Hybrid, // Add for for Hybrid flow
+                    RequirePkce = false, // Add for for Hybrid flow
                     AllowRememberConsent = false,
                     RedirectUris = new List<string>() 
                     {
@@ -47,6 +49,7 @@ public class Config
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
+                        "movieAPI" //Add for for Hybrid flow
                     }
                 }
 
