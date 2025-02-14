@@ -74,7 +74,8 @@ public class MovieAPIService : IMovieAPIService
         //way 1
         //HttpClientFactory ব্যবহার করে কোডকে সাধারণ (generic) করা।
         var httpClient = _httpClientFactory.CreateClient("MovieApiClient");
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/movies/");
+        //var request = new HttpRequestMessage(HttpMethod.Get, "/api/movies/");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/movies"); // as we will use api gateway
 
         var response  = await httpClient.SendAsync(request,HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
