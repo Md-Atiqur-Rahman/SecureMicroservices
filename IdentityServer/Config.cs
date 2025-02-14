@@ -33,7 +33,7 @@ public class Config
                     AllowRememberConsent = false,
                     RedirectUris = new List<string>() 
                     {
-                        "https://localhost:5002/sign-oidc" //--this as Client app root
+                        "https://localhost:5002/signin-oidc" //--this as Client app root
                     },
                     PostLogoutRedirectUris = new List<string>() 
                     {
@@ -75,6 +75,7 @@ public class Config
         {
             new TestUser
             {
+                //SubjectId ="0HNACP8VDLMMB:00000007",
                 SubjectId ="5BE86359-073C-434B-AD2D-A3932222DABE",
                 Username="Himel",
                 Password = "1234",
