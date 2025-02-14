@@ -1,17 +1,57 @@
 ﻿using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Movies.Client.Models;
 using Newtonsoft.Json;
+using System.Reflection.Metadata;
 
 namespace Movies.Client.ApiServices;
 
 public class MovieAPIService : IMovieAPIService
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public MovieAPIService(IHttpClientFactory httpClientFactory)
+    public MovieAPIService(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
     {
         _httpClientFactory = httpClientFactory;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    public async Task<UserInfoViewModel> GetUserInfo()
+    {
+        var idpClient = _httpClientFactory.CreateClient("IDPClient");
+
+        var metaDataResponse = await idpClient.GetDiscoveryDocumentAsync();
+
+        if (metaDataResponse.IsError)
+        {
+            throw new HttpRequestException("Something went wrong while requesting the access token");
+        }
+
+        var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+
+        var userInfoResponse = await idpClient.GetUserInfoAsync(
+           new UserInfoRequest
+           {
+               Address = metaDataResponse.UserInfoEndpoint,
+               Token = accessToken
+           });
+
+        if (userInfoResponse.IsError)
+        {
+            throw new HttpRequestException("Something went wrong while getting user info");
+        }
+
+        var userInfoDictionary = new Dictionary<string, string>();
+
+        foreach (var claim in userInfoResponse.Claims)
+        {
+            userInfoDictionary.Add(claim.Type, claim.Value);
+        }
+
+        return new UserInfoViewModel(userInfoDictionary);
     }
 
     public Task<bool> CreateMovie(Movie movie)
@@ -95,4 +135,5 @@ public class MovieAPIService : IMovieAPIService
     {
         throw new NotImplementedException();
     }
+    
 }
