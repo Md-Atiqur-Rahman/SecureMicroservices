@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -18,18 +20,6 @@ namespace Movies.Client.Controllers
             _movieAPIService = movieAPIService;
         }
 
-
-        private async Task LogTokenAndClaims()
-        {
-            var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
-
-            Debug.WriteLine($"Identity token: {identityToken}");
-
-            foreach (var claim in User.Claims)
-            {
-                Debug.WriteLine($"Claim type: {claim.Type} - Claim value: {claim.Value}");
-            }
-        }
         // GET: Movies
         public async Task<IActionResult> Index()
         {
@@ -170,6 +160,24 @@ namespace Movies.Client.Controllers
         {
             return true;
             //return _context.Movie.Any(e => e.Id == id);
+        }
+
+        private async Task LogTokenAndClaims()
+        {
+            var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+
+            Debug.WriteLine($"Identity token: {identityToken}");
+
+            foreach (var claim in User.Claims)
+            {
+                Debug.WriteLine($"Claim type: {claim.Type} - Claim value: {claim.Value}");
+            }
+        }
+
+        public async Task Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
         }
     }
 }
