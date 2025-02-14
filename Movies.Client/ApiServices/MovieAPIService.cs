@@ -33,9 +33,11 @@ public class MovieAPIService : IMovieAPIService
     {
         //way 1
         //HttpClientFactory ব্যবহার করে কোডকে সাধারণ (generic) করা।
-        var httpClient = _httpClientFactory.CreateClient("MoveieAPIClinet");
+        var httpClient = _httpClientFactory.CreateClient("MovieApiClient");
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/movies/");
+
         var response  = await httpClient.SendAsync(request,HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
         List<Movie> result = JsonConvert.DeserializeObject<List<Movie>>(content);

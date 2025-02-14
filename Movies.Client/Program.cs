@@ -7,6 +7,7 @@ using System.Reflection.Metadata;
 using System.Security.Policy;
 using Microsoft.Net.Http.Headers;
 using Movies.Client.HttpHandlers;
+using IdentityModel.Client;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IMovieAPIService, MovieAPIService>();
@@ -44,6 +45,22 @@ builder.Services.AddHttpClient("MovieApiClient", client =>
 .AddHttpMessageHandler<AuthenticationDelegatingHandler>();// Delegating Handler যুক্ত করব যাতে এটি স্বয়ংক্রিয়ভাবে টোকেন সংগ্রহ করতে পারে।
 //এতে HttpClient একবার তৈরি হওয়ার সময়ই সব কনফিগারেশন সেট করা হবে, ফলে প্রতিবার URL উল্লেখ করার দরকার নেই।
 
+// create for http client used for accessing the IDP
+builder.Services.AddHttpClient("IDPClient", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:5005/");
+    client.DefaultRequestHeaders.Clear();
+    client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+});
+
+builder.Services.AddSingleton(
+    new ClientCredentialsTokenRequest
+    {
+        Address = "https://localhost:5005/connect/token",
+        ClientId = "movieClient",
+        ClientSecret = "secret",
+        Scope = "movieAPI"
+    });
 
 builder.Services.AddControllersWithViews();
 
