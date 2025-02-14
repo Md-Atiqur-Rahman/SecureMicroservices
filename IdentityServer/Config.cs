@@ -57,7 +57,8 @@ public class Config
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Address,
                         IdentityServerConstants.StandardScopes.Email,
-                        "movieAPI" //Add for for Hybrid flow
+                        "movieAPI", //Add for for Hybrid flow
+                        "roles" //new claims
                     }
                 }
 
@@ -81,6 +82,7 @@ public class Config
                new IdentityResources.Profile(),
                new IdentityResources.Address(),
                new IdentityResources.Email(),
+               new IdentityResource("roles", "Role", new List<string>() { "role" })
         };
 
     public static List<TestUser> TestUsers =>

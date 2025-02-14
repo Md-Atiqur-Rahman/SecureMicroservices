@@ -8,6 +8,7 @@ using System.Security.Policy;
 using Microsoft.Net.Http.Headers;
 using Movies.Client.HttpHandlers;
 using IdentityModel.Client;
+using IdentityModel;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IMovieAPIService, MovieAPIService>();
@@ -32,10 +33,20 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("address");
     options.Scope.Add("email");
     options.Scope.Add("movieAPI");//for Hybrid flow
+    options.Scope.Add("roles");//added new claims
+    options.ClaimActions.MapUniqueJsonKey("role", "role");
 
     options.SaveTokens = true;
     options.GetClaimsFromUserInfoEndpoint = true;
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        NameClaimType = JwtClaimTypes.GivenName,
+        RoleClaimType = JwtClaimTypes.Role
+    };
 });
+
+
 
 
 builder.Services.AddTransient<AuthenticationDelegatingHandler>();
